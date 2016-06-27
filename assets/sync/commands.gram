@@ -2,6 +2,9 @@
 
 grammar commands;
 
-<command> = on | off;
+<command> = turn light on | turn light off | set temperature to <number>;
+
+<digit> = one | two | three | four |  five | six | seven | eight | nine | ten;
+<number> = twenty <digit>;
 
 public <commands> = <command>+;

@@ -6,6 +6,6 @@
     <string name="hello_world">Hello world!</string>
 
     <string name="kws_caption">To start demonstration say \"ok flower\".</string>
-    <string name="menu_caption">Available commands: "Turn on light" or "Turn of light"</string>
+    <string name="menu_caption">Available commands: "Turn light on" or "Turn ligh off"</string>
 
 </resources>

@@ -209,7 +209,6 @@ public class MainActivity extends Activity implements
 
                 .setRawLogDir(assetsDir) // To disable logging of raw audio comment out this call (takes a lot of space on the device)
                 .setKeywordThreshold(1e-45f) // Threshold to tune for keyphrase to balance between false alarms and misses
-                .setBoolean("-allphone_ci", true)  // Use context-independent phonetic search, context-dependent is too slow for mobile
 
 
                 .getRecognizer();
