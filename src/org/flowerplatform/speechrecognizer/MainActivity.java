@@ -53,14 +53,10 @@ import edu.cmu.pocketsphinx.SpeechRecognizerSetup;
 
 import static android.widget.Toast.makeText;
 
-public class MainActivity extends Activity implements
-        RecognitionListener {
+public class MainActivity extends Activity implements RecognitionListener {
 
     /* Named searches allow to quickly reconfigure the decoder */
     private static final String KWS_SEARCH = "wakeup";
-    private static final String FORECAST_SEARCH = "forecast";
-    private static final String DIGITS_SEARCH = "digits";
-    private static final String PHONE_SEARCH = "phones";
     private static final String MENU_SEARCH = "menu";
 
     /* Keyword we are looking for to activate menu */
@@ -120,6 +116,7 @@ public class MainActivity extends Activity implements
             }
         }.execute();
     }
+    
     //TODO it is not in interface
 /*    @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -208,7 +205,7 @@ public class MainActivity extends Activity implements
                 .setDictionary(new File(assetsDir, "cmudict-en-us.dict"))
 
                 .setRawLogDir(assetsDir) // To disable logging of raw audio comment out this call (takes a lot of space on the device)
-                .setKeywordThreshold(1e-45f) // Threshold to tune for keyphrase to balance between false alarms and misses
+                .setKeywordThreshold(1e-25f) // Threshold to tune for keyphrase to balance between false alarms and misses
 
 
                 .getRecognizer();
