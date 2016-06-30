@@ -35,15 +35,19 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-
+import java.util.Locale;
 
 import edu.cmu.pocketsphinx.Assets;
 import edu.cmu.pocketsphinx.Hypothesis;
@@ -67,6 +71,8 @@ public class MainActivity extends Activity implements RecognitionListener {
 
     private SpeechRecognizer recognizer;
     private HashMap<String, Integer> captions;
+    private TextToSpeech t1;
+    Button speakButton;
 
     @Override
     public void onCreate(Bundle state) {
@@ -79,6 +85,15 @@ public class MainActivity extends Activity implements RecognitionListener {
         captions.put(MENU_SEARCH, R.string.menu_caption);
         ((TextView) findViewById(R.id.caption_text))
                 .setText("Preparing the recognizer");
+        
+        t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+               if(status != TextToSpeech.ERROR) {
+                  t1.setLanguage(Locale.US);
+               }
+            }
+         });
 
         // Check if user has given permission to record audio
         int permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.RECORD_AUDIO);
@@ -87,6 +102,15 @@ public class MainActivity extends Activity implements RecognitionListener {
             return;
         }
         runRecognizerSetup();
+        speakButton = (Button)findViewById(R.id.speak);
+        speakButton.setOnClickListener(new Button.OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				t1.speak(Commands.COMMAND1, TextToSpeech.QUEUE_FLUSH, null);
+				
+			}
+		});
+        
     }
 
     private void runRecognizerSetup() {
@@ -135,6 +159,10 @@ public class MainActivity extends Activity implements RecognitionListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if(t1 !=null){
+            t1.stop();
+            t1.shutdown();
+         }
 
         if (recognizer != null) {
             recognizer.cancel();
@@ -161,11 +189,16 @@ public class MainActivity extends Activity implements RecognitionListener {
     /**
      * This callback is called when we stop the recognizer.
      */
-    @Override
+	@Override
     public void onResult(Hypothesis hypothesis) {
         ((TextView) findViewById(R.id.result_text)).setText("");
         if (hypothesis != null) {
             String text = hypothesis.getHypstr();
+            if(Commands.COMMAND1.equals(text)) {
+            	t1.speak(Commands.COMMAND1, TextToSpeech.QUEUE_FLUSH, null);
+            } else if(Commands.COMMAND2.equals(text)) {
+            	t1.speak(Commands.COMMAND2, TextToSpeech.QUEUE_FLUSH, null);
+            }
             makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
         }
     }
